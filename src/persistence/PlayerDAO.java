@@ -19,4 +19,11 @@ public class PlayerDAO implements IPlayerDAO
 	{
 		return 0;
 	}
+
+	@Override
+	public boolean login(PlayerDTO player)
+	{
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

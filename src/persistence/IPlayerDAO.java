@@ -12,4 +12,7 @@ public interface IPlayerDAO
 	
 	// 회원가입 
 	int addPlayer(PlayerDTO player);
+	
+	// 로그인
+	boolean login(PlayerDTO player);
 }
