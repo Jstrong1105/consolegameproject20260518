@@ -83,6 +83,8 @@ public final class InputUtil
 	 */
 	public static int readInt(String prompt, int min, int max)
 	{
+		prompt = String.format(prompt + " (%d ~ %d)", min,max);
+		
 		while(true)
 		{
 			try
@@ -117,15 +119,17 @@ public final class InputUtil
 	 */
 	public static boolean readBool(String prompt, String trueAnswer, String falseAnswer)
 	{
+		prompt = String.format(prompt + " (%s/%s)", trueAnswer,falseAnswer);
+		
 		while(true)
 		{
 			String answer = readString(prompt);
 			
-			if(answer.equals(trueAnswer))
+			if(answer.equalsIgnoreCase(trueAnswer))
 			{
 				return true;
 			}
-			else if(answer.equals(falseAnswer))
+			else if(answer.equalsIgnoreCase(falseAnswer))
 			{
 				return false;
 			}
