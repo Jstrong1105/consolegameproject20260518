@@ -1,5 +1,7 @@
 package game.minesweeper;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.function.Consumer;
 
 import common.ConsoleUtil;
@@ -12,6 +14,8 @@ public class Minesweeper implements GameApp
 {
 	private static final String GAME_NAME = "지뢰찾기";
 	private static final String GAME_DESCRIPTION = "지뢰를 피하세요!";
+	private Instant startTime;
+	private int chance;
 	
 	@Override
 	public String getGameName()
@@ -24,7 +28,6 @@ public class Minesweeper implements GameApp
 	{
 		return GAME_DESCRIPTION;
 	}
-
 	
 	@Override
 	public void run()
@@ -65,10 +68,12 @@ public class Minesweeper implements GameApp
 	private void initialize()
 	{
 		ConsoleUtil.clear();
+		startTime = Instant.now();
 		
 		playerRow = -1;
 		playerCol = -1;
 		isFirst = true;
+		chance = 3;
 		
 		size = InputUtil.readInt("사이즈를 입력하세요",10,20);
 		mineCount = InputUtil.readInt("지뢰 개수를 입력하세요",size,size*3);
@@ -82,6 +87,9 @@ public class Minesweeper implements GameApp
 	private void print()
 	{
 		board.print();
+		System.out.println("지뢰의 수 : " + board.getMineCount());
+		System.out.println("깃발의 수 : " + board.getFlagCount());
+		System.out.println("남은 찬수 : " + chance);
 	}
 	
 	// 사용자 선택
@@ -193,7 +201,9 @@ public class Minesweeper implements GameApp
 	{
 		if(isFirst)
 		{
-			System.out.println("첫 오픈 전에는 깃발 설치 불가");
+			InputUtil.pause("첫 오픈 전 깃발 사용 불가");
+			cancel();
+			return;
 		}
 		
 		board.toggleFlagCell(playerRow, playerCol);
@@ -205,7 +215,30 @@ public class Minesweeper implements GameApp
 	{
 		if(isFirst)
 		{
-			System.out.println("첫 오픈 전에는 찬스 불가");
+			InputUtil.pause("첫 오픈 전 찬스 사용 불가");
+			cancel();
+			return;
+		}
+		
+		if(chance <= 0)
+		{
+			InputUtil.pause("찬스를 모두 사용했습니다.");
+			cancel();
+			return;
+		}
+		
+		chance--;
+		
+		if(board.isMine(playerRow, playerCol))
+		{	
+			InputUtil.pause("해당 셀은 지뢰입니다.");
+			toggleFlag();
+			return;
+		}
+		else
+		{
+			InputUtil.pause("해당 셀은 지뢰가 아닙니다.");
+			open();
 		}
 	}
 	
@@ -221,6 +254,12 @@ public class Minesweeper implements GameApp
 		board.finish();
 		board.print();
 		System.out.println(win ? "승리" : "패배");
+		
+		if(win)
+		{
+			System.out.println("클리어 타임 : " + Duration.between(startTime, Instant.now()).getSeconds() + "초");
+		}
+		
 		run = false;
 	}
 }

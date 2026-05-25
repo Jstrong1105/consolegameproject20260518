@@ -325,6 +325,13 @@ public class CellBoard implements ICellBoard
 	@Override
 	public void finish()
 	{
+		// 깃발인 셀을 전부 닫힌 셀로 바꿈
+		Arrays.stream(board)
+		.flatMap(Arrays::stream)
+		.filter(cell->cell.isFlag())
+		.forEach(cell->cell.toggleFlag());
+		
+		// 지뢰인 셀을 전부 오픈함
 		Arrays.stream(board)
 		.flatMap(Arrays::stream)
 		.filter(cell->cell.isMine())
