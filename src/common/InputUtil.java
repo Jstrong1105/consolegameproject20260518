@@ -20,6 +20,25 @@ public final class InputUtil
 	/**
 	 * 
 	 * @param prompt : 사용자 안내 메시지
+	 * 사용자에게 안내 메시지를 보여주고 엔터를 입력할때 까지 대기하는 메소드
+	 */
+	public static void pause(String prompt)
+	{
+		System.out.println(prompt);
+		
+		try
+		{
+			br.readLine();
+		} 
+		catch (Exception e)
+		{
+			throw new RuntimeException("입력 스트림 에러 발생");
+		}
+	}
+	
+	/**
+	 * 
+	 * @param prompt : 사용자 안내 메시지
 	 * @return       : 사용자 입력 값
 	 * exit 입력 시 프로그램 강제 종료 → 테스트 목적
 	 */
