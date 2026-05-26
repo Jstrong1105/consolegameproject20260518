@@ -137,29 +137,37 @@ public class CellBoard implements ICellBoard
 	// 해당 칸 주변 8칸도 연쇄적으로 오픈됨
 	private void openAdjacentMines(int row, int col)
 	{
+		// 사용자가 입력한 칸이 인접 지뢰가 0 인 경우
 		Queue<int[]> temp = new LinkedList<int[]>();
 		
+		// 사용자 입력 칸을 Queue 에 추가
 		temp.add(new int[] {row,col});
 		
+		// Queue 가 비어있지 않다면 반복 실행
 		while(!temp.isEmpty())
 		{
+			// 하나의 데이터를 꺼내옴
 			int[] emp = temp.poll();
 			
+			// 해당 칸 주변 8칸을 오픈함
 			for(int i = 0; i < dRow.length; i++)
 			{
 				int nRow = emp[0] + dRow[i];
 				int nCol = emp[1] + dCol[i];
 				
+				// 보드판의 범위를 벗어났다면 넘어감
 				if(nRow < 0 || nCol < 0 || nRow >= size || nCol >= size)
 				{
 					continue;
 				}
 				
+				// 이미 열려있거나 깃발 상태라면 넘어감
 				if(board[nRow][nCol].isClosed())
 				{
 					board[nRow][nCol].open();
 					openCount++;
 					
+					// 만약 해당 칸도 인접 지뢰가 0 이라면 해당 칸을 Queue 에 추가함
 					if(board[nRow][nCol].getAdjacentMines() == 0)
 					{
 						temp.add(new int[] {nRow, nCol});
@@ -202,7 +210,11 @@ public class CellBoard implements ICellBoard
 		return flagCount;
 	}
 	
-	private static final String[] OPEN_SHAPE = {" □ ","\033[92m ① \033[0m","\033[94m ② \033[0m","\033[91m ③ \033[0m","\033[91m ④ \033[0m","\033[91m ⑤ \033[0m","\033[91m ⑥ \033[0m","\033[91m ⑦ \033[0m","\033[91m ⑧ \033[0m"};
+	private static final String[] OPEN_SHAPE = {" □ ","\033[92m ① \033[0m"
+												,"\033[94m ② \033[0m","\033[91m ③ \033[0m"
+												,"\033[91m ④ \033[0m","\033[91m ⑤ \033[0m"
+												,"\033[91m ⑥ \033[0m","\033[91m ⑦ \033[0m"
+												,"\033[91m ⑧ \033[0m"};
 	private static final String CLOSED_SHAPE = " ■ ";
 	private static final String MINE_SHAPE = " ※ ";
 	private static final String FLAG_SHAPE = " P ";
