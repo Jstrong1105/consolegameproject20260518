@@ -14,8 +14,6 @@ public class Minesweeper implements GameApp
 {
 	private static final String GAME_NAME = "지뢰찾기";
 	private static final String GAME_DESCRIPTION = "지뢰를 피하세요!";
-	private Instant startTime;
-	private int chance;
 	
 	@Override
 	public String getGameName()
@@ -63,6 +61,8 @@ public class Minesweeper implements GameApp
 	private int playerRow;
 	private int playerCol;
 	private boolean isFirst;
+	private Instant startTime;
+	private int chance;
 	
 	// 초기화
 	private void initialize()
