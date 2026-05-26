@@ -1,5 +1,7 @@
 package game.trump;
 
+import java.util.Objects;
+
 /**
  * 해당 클래스는 외부에서 직접 생성하지 못하고
  * 패키지 내에 있는 CardDeck 클래스로만 생성하도록 구현
@@ -53,18 +55,25 @@ public class Card
 		return open;
 	}
 	
-	public void setOpen(boolean open)
+	public void open()
 	{
-		this.open = open;
+		this.open = true;
+	}
+	
+	public void hidden()
+	{
+		this.open = false;
 	}
 	
 	// 카드 복사하기
+	// 상태는 복사하지 않음
 	public Card copyCard()
 	{
 		return new Card(this.shape,this.number);
 	}
 	
 	// 카드 비교하기
+	// 상태와 상관없이 숫자와 모양이 같으면 동일한 카드로 인식
 	@Override
 	public boolean equals(Object o)
 	{
@@ -81,6 +90,6 @@ public class Card
 	@Override
 	public int hashCode()
 	{
-		return number * 31 + shape.ordinal();
+		return Objects.hash(shape,number);
 	}
 }

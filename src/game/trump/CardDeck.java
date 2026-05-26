@@ -9,7 +9,7 @@ import java.util.List;
  */
 public class CardDeck
 {
-	private List<Card> cardDeck;
+	private List<Card> cards;
 	
 	// 생성자
 	public CardDeck()
@@ -18,29 +18,30 @@ public class CardDeck
 	}
 	
 	// 덱 초기화
+	// 임의로 초기화 가능
 	public void init()
 	{
-		cardDeck = new ArrayList<>();
+		cards = new ArrayList<>();
 		
 		for(int i = 2; i <= 14; i++)
 		{
 			for(CardShape shape : CardShape.values())
 			{
-				cardDeck.add(new Card(shape,i));
+				cards.add(new Card(shape,i));
 			}
 		}
 		
-		Collections.shuffle(cardDeck);
+		Collections.shuffle(cards);
 	}
 	
 	// 카드 한장 주기
 	public Card drawCard()
 	{
-		if(cardDeck.isEmpty())
+		if(cards.isEmpty())
 		{
 			throw new IllegalStateException("카드 덱이 비어있습니다.");
 		}
 		
-		return cardDeck.remove(cardDeck.size()-1);
+		return cards.remove(cards.size()-1);
 	}
 }	

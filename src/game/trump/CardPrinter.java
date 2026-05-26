@@ -5,10 +5,18 @@ import java.util.List;
 /**
  * 카드 뭉치를 받아서 출력하는 클래스
  */
-public class CardPrinter
+public final class CardPrinter
 {
-	public void printCard(List<Card> cardDeck)
+	// 인스턴스 생성 방지
+	private CardPrinter() {}
+	
+	public static void printCards(List<Card> cardDeck)
 	{
+		if(cardDeck == null || cardDeck.isEmpty())
+		{
+			throw new IllegalArgumentException("빈 카드덱 오류");
+		}
+		
 		System.out.println("┌─────┐ ".repeat(cardDeck.size()));
 		
 		for(Card card : cardDeck)

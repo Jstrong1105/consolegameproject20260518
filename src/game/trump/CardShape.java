@@ -5,10 +5,10 @@ package game.trump;
  */
 public enum CardShape
 {
-	SPADE("♤"),
-	DIAMOND("◆"),
-	HEART("♥"),
-	CLUB("♧")
+	SPADE("\033[94m ♠\033[0m"),
+	DIAMOND("\033[91m ◆\033[0m"),
+	HEART("\033[91m ♥\033[0m"),
+	CLUB("\033[94m ♣\033[0m")
 	;
 	
 	CardShape(String shape)
