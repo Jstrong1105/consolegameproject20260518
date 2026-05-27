@@ -33,6 +33,6 @@ public final class CardPrinter
 		
 		System.out.println();
 		
-		System.out.println("└─────┘ ".repeat(cardDeck.size()));
+		System.out.print("└─────┘ ".repeat(cardDeck.size()));
 	}
 }
