@@ -13,6 +13,13 @@ public class HandCards implements IHandCards
 {
 	private List<Card> handCards;
 
+	public HandCards(IHandRankEvaluator evaluator)
+	{
+		this.evaluator = evaluator;
+	}
+	
+	private IHandRankEvaluator evaluator;
+	
 	@Override
 	public void init()
 	{
@@ -46,7 +53,7 @@ public class HandCards implements IHandCards
 	@Override
 	public HandRank getResult()
 	{
-		return null;
+		return evaluator.eval(handCards);
 	}
 	
 }

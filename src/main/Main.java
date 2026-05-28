@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import game.minesweeper.Minesweeper;
+import game.poker.Poker;
 import game.trump.Card;
 import game.trump.CardDeck;
 import game.trump.CardPrinter;
@@ -19,17 +20,21 @@ public class Main
 		
 		//mine.run();
 		
-		CardDeck cardDeck = new CardDeck();
+		/*
+		 * CardDeck cardDeck = new CardDeck();
+		 * 
+		 * List<Card> deck = new ArrayList<Card>();
+		 * 
+		 * deck.add(cardDeck.drawCard()); deck.add(cardDeck.drawCard());
+		 * deck.add(cardDeck.drawCard()); deck.add(cardDeck.drawCard());
+		 * deck.add(cardDeck.drawCard());
+		 * 
+		 * CardPrinter.printCards(deck);
+		 */
 		
-		List<Card> deck = new ArrayList<Card>();
+		Poker poker = new Poker();
 		
-		deck.add(cardDeck.drawCard());
-		deck.add(cardDeck.drawCard());
-		deck.add(cardDeck.drawCard());
-		deck.add(cardDeck.drawCard());
-		deck.add(cardDeck.drawCard());
-		
-		CardPrinter.printCards(deck);
+		poker.run();
 		
 	}
 }

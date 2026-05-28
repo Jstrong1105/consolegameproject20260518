@@ -70,8 +70,8 @@ public class Poker implements GameApp
 		ConsoleUtil.clear();
 	
 		deck = new CardDeck();
-		playerCard = new HandCards();
-		cpuCard = new HandCards();
+		playerCard = new HandCards(new HandRankEvaluator());
+		cpuCard = new HandCards(new HandRankEvaluator());
 		
 		playerCoin = START_COIN;
 		
@@ -140,6 +140,7 @@ public class Poker implements GameApp
 		// 기권
 		if(coin == 0 && playerCoin != 0)
 		{
+			InputUtil.pause("YOUR FOLD");
 			round = false;
 			return;
 		}
@@ -163,20 +164,39 @@ public class Poker implements GameApp
 	{
 		if(playerCard.count() >= mode)
 		{
-			// 승패 확인
-			boolean win = !true;
-			
-			if(win)
+			for(int i = 0; i < mode; i++)
 			{
+				cpuCard.open(i);
+			}
+			
+			ConsoleUtil.clear();
+			HandRank cpuResult = cpuCard.getResult();
+			HandRank playerResult = playerCard.getResult();
+			
+			cpuCard.print();
+			System.out.println(cpuResult.getName());
+			
+			playerCard.print();
+			System.out.println(playerResult.getName());
+			
+			
+			// 승패 확인
+			int result = playerResult.compareTo(cpuResult);
+			
+			if(result > 0)
+			{
+				InputUtil.pause("YOU WIN!");
 				playerCoin += betCoin * 2;
 				round = false;
 			}
-			else if(!win)
+			else if(result < 0)
 			{
+				InputUtil.pause("YOU LOOSE");
 				round = false;
 			}
 			else
 			{
+				InputUtil.pause("DRAW");
 				playerCoin += betCoin;
 				round = false;
 			}
