@@ -21,14 +21,28 @@ public final class CardPrinter
 		
 		for(Card card : cardDeck)
 		{
-			System.out.printf("│ %2s  │ ",card.getShape());
+			if(card.isOpen())
+			{
+				System.out.printf("│ %2s  │ ",card.getShape());
+			}
+			else
+			{
+				System.out.print("│  ?  │ ");
+			}
 		}
 		
 		System.out.println();
 		
 		for(Card card : cardDeck)
 		{
-			System.out.printf("│ %2d  │ ",card.getNumber());
+			if(card.isOpen())
+			{
+				System.out.printf("│ %2d  │ ",card.getNumber());
+			}
+			else
+			{
+				System.out.print("│  ?  │ ");
+			}
 		} 
 		
 		System.out.println();
