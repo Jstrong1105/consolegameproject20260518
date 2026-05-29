@@ -129,14 +129,9 @@ public class Poker implements GameApp
 		System.out.println("베팅 코인 : " + betCoin);
 		
 		int coin = 0;
-		
-		do
-		{
-			coin = InputUtil.readInt("베팅할 코인을 입력",0,playerCoin);
-			
-			
-		} while (coin < 0 || coin > playerCoin);
-		
+	
+		coin = InputUtil.readInt("베팅할 코인을 입력",0,playerCoin);
+	
 		// 기권
 		if(coin == 0 && playerCoin != 0)
 		{
