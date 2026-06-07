@@ -3,6 +3,7 @@ package main;
 import java.util.ArrayList;
 import java.util.List;
 
+import game.memorygame.MemoryGame;
 import game.minesweeper.Minesweeper;
 import game.poker.Poker;
 import game.trump.Card;
@@ -32,9 +33,13 @@ public class Main
 		 * CardPrinter.printCards(deck);
 		 */
 		
-		Poker poker = new Poker();
+		//Poker poker = new Poker();
 		
-		poker.run();
+		//poker.run();
+		
+		MemoryGame game = new MemoryGame();
+		
+		game.run();
 		
 	}
 }
