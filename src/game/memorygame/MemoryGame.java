@@ -67,8 +67,6 @@ public class MemoryGame implements GameApp
 	{
 		 ConsoleUtil.clear();
 		 
-		 InputUtil.pause("메모리 게임입니다.");
-		 
 		 count = InputUtil.readInt("카드의 개수를 입력하세요", 4, 8);
 		 group = InputUtil.readInt("그룹의 장수를 입력하세요", 2, 4);
 		 
