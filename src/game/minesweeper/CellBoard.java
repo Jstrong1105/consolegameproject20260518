@@ -5,21 +5,21 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Random;
 
-import common.ConsoleUtil;
 
 /**
  * 셀 보드 인터페이스 구현 클래스
  */
-public class CellBoard implements ICellBoard
+class CellBoard implements ICellBoard
 {
 	private Cell[][] board;
 	private int size;
 	private int mineCount;
 	private int flagCount;
 	private int openCount;
-
-	private static int[] dRow = {-1,-1,-1,0,0,1,1,1};
- 	private static int[] dCol = {-1,0,1,-1,1,-1,0,1};
+	private Random rd;
+	
+	private static final int[] D_ROW = {-1,-1,-1,0,0,1,1,1};
+ 	private static final int[] D_COL = {-1,0,1,-1,1,-1,0,1};
 	
 	@Override
 	public void init(int size, int mineCount)
@@ -28,6 +28,7 @@ public class CellBoard implements ICellBoard
 		this.mineCount = mineCount;
 		flagCount = 0;
 		openCount = 0;
+		rd = new Random();
 		
 		board = new Cell[size][size];
 		
@@ -39,11 +40,9 @@ public class CellBoard implements ICellBoard
 			}
 		}
 		
-		int emp = 0;
+		int count = 0;
 		
-		Random rd = new Random();
-		
-		while(emp < mineCount)
+		while(count < mineCount)
 		{
 			int row = rd.nextInt(size);
 			int col = rd.nextInt(size);
@@ -51,7 +50,7 @@ public class CellBoard implements ICellBoard
 			if(!board[row][col].isMine())
 			{
 				board[row][col].setMine(true);
-				emp++;
+				count++;
 			}
 		}
 	}
@@ -67,8 +66,6 @@ public class CellBoard implements ICellBoard
 	{
 		if(board[row][col].isMine())
 		{
-			Random rd = new Random();
-			
 			while(true)
 			{
 				int nRow = rd.nextInt(size);
@@ -100,10 +97,10 @@ public class CellBoard implements ICellBoard
 	// 지뢰 주변 8칸의 인접 지뢰 수를 처리하는 메소드
 	private void addAdjacentMines(int row, int col)
 	{
-		for(int i = 0; i < dRow.length; i++)
+		for(int i = 0; i < D_ROW.length; i++)
 		{
-			int nRow = row + dRow[i];
-			int nCol = col + dCol[i];
+			int nRow = row + D_ROW[i];
+			int nCol = col + D_COL[i];
 			
 			if(nRow < 0 || nCol < 0 || nRow >= size || nCol >= size)
 			{
@@ -147,13 +144,13 @@ public class CellBoard implements ICellBoard
 		while(!temp.isEmpty())
 		{
 			// 하나의 데이터를 꺼내옴
-			int[] emp = temp.poll();
+			int[] current = temp.poll();
 			
 			// 해당 칸 주변 8칸을 오픈함
-			for(int i = 0; i < dRow.length; i++)
+			for(int i = 0; i < D_ROW.length; i++)
 			{
-				int nRow = emp[0] + dRow[i];
-				int nCol = emp[1] + dCol[i];
+				int nRow = current[0] + D_ROW[i];
+				int nCol = current[1] + D_COL[i];
 				
 				// 보드판의 범위를 벗어났다면 넘어감
 				if(nRow < 0 || nCol < 0 || nRow >= size || nCol >= size)
@@ -209,99 +206,11 @@ public class CellBoard implements ICellBoard
 	{
 		return flagCount;
 	}
-	
-	private static final String[] OPEN_SHAPE = {" □ ","\033[92m ① \033[0m"
-												,"\033[94m ② \033[0m","\033[91m ③ \033[0m"
-												,"\033[91m ④ \033[0m","\033[91m ⑤ \033[0m"
-												,"\033[91m ⑥ \033[0m","\033[91m ⑦ \033[0m"
-												,"\033[91m ⑧ \033[0m"};
-	private static final String CLOSED_SHAPE = " ■ ";
-	private static final String MINE_SHAPE = " ※ ";
-	private static final String FLAG_SHAPE = " P ";
-	
 
 	@Override
-	public void print()
+	public Cell[][] getBoard()
 	{
-		ConsoleUtil.clear();
-		
-		System.out.print("==".repeat(size));
-		
-		System.out.print("지뢰 찾기");
-		
-		System.out.println("==".repeat(size));
-		
-		System.out.println();
-		
-		System.out.print("      ");
-		
-		for (int i = 0; i < size; i++)
-		{
-			System.out.printf("%2d ",i+1);
-		}
-		
-		System.out.println();
-		
-		System.out.print("      ");
-		System.out.print("───".repeat(size));
-		
-		System.out.println();
-		
-		for(int row = 0; row < size; row++)
-		{
-			System.out.printf(" %2d │ ",row+1);
-			
-			for(int col = 0; col < size; col++)
-			{
-				String str = "";
-				
-				if(board[row][col].isClosed())
-				{
-					str = CLOSED_SHAPE;
-				}
-				else if(board[row][col].isFlag())
-				{
-					str = FLAG_SHAPE;
-				}
-				else if(board[row][col].isOpen())
-				{
-					if(board[row][col].isMine())
-					{
-						str = MINE_SHAPE;
-					}
-					else
-					{
-						str = OPEN_SHAPE[board[row][col].getAdjacentMines()];
-					}
-				}
-				
-				if(board[row][col].isChoice())
-				{
-					str = "\033[92;103m" + str + "\033[0m";
-				}
-				
-				System.out.printf("%s",str);
-			}
-			
-			System.out.printf(" │ %2d",row+1);
-			
-			System.out.println();
-		}
-		
-		System.out.print("      ");
-		System.out.print("───".repeat(size));
-		
-		System.out.println();
-		
-		System.out.print("      ");
-		
-		for (int i = 0; i < size; i++)
-		{
-			System.out.printf("%2d ",i+1);
-		}
-		
-		System.out.println();
-		System.out.println();
+		return board;
 	}
 
 	@Override

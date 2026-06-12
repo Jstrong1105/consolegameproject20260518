@@ -6,13 +6,13 @@ import java.util.Objects;
 /**
  * 족보 결과
  */
-public class HandRank implements Comparable<HandRank>
+class HandRank implements Comparable<HandRank>
 {
 	private final HandRankType type;
 	private final List<Integer> kickers;
 	
 	// 생성자
-	public HandRank(HandRankType type, List<Integer> kickers)
+	HandRank(HandRankType type, List<Integer> kickers)
 	{
 		if(kickers.size() != type.getSize())
 		{
@@ -24,7 +24,7 @@ public class HandRank implements Comparable<HandRank>
 	}
 	
 	// 족보 이름 반환
-	public String getName()
+	String getName()
 	{
 		return type.getName(kickers);
 	}

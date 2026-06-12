@@ -8,53 +8,13 @@ import common.ConsoleUtil;
 import common.IMenu;
 import common.InputUtil;
 import common.MenuUtil;
-import game.GameApp;
+import domain.DoubleActionTemplate;
+import domain.GameApp;
 
-public class Minesweeper implements GameApp
+class Minesweeper extends DoubleActionTemplate
 {
-	private static final String GAME_NAME = "지뢰찾기";
-	private static final String GAME_DESCRIPTION = "지뢰를 피하세요!";
-	
-	@Override
-	public String getGameName()
-	{
-		return GAME_NAME;
-	}
-
-	@Override
-	public String getGameDescription()
-	{
-		return GAME_DESCRIPTION;
-	}
-	
-	@Override
-	public void run()
-	{
-		do
-		{
-			initialize();
-			
-			run = true;
-			
-			while(run)
-			{
-				print();
-				choice();
-				print();
-				action();
-			}
-			
-		} while (restart());
-	}
-	
-	// 다시시작
-	private boolean restart()
-	{
-		return InputUtil.readBool("다시 시작하시겠습니까", "Y", "N");
-	}
-	
-	private boolean run;
-	private ICellBoard board;
+	private final ICellBoard board;
+	private final ICellPrinter printer;
 	private int size;
 	private int mineCount;
 	
@@ -64,8 +24,14 @@ public class Minesweeper implements GameApp
 	private Instant startTime;
 	private int chance;
 	
-	// 초기화
-	private void initialize()
+	Minesweeper(ICellBoard board, ICellPrinter printer)
+	{
+		this.board = board;
+		this.printer = printer;
+	}
+	
+	@Override
+	protected void init()
 	{
 		ConsoleUtil.clear();
 		startTime = Instant.now();
@@ -78,22 +44,20 @@ public class Minesweeper implements GameApp
 		size = InputUtil.readInt("사이즈를 입력하세요",10,20);
 		mineCount = InputUtil.readInt("지뢰 개수를 입력하세요",size,size*3);
 		
-		board = new CellBoard();
-		
 		board.init(size, mineCount);
 	}
 	
-	// 화면 출력
-	private void print()
+	@Override
+	protected void render()
 	{
-		board.print();
+		printer.print(board.getBoard());
 		System.out.println("지뢰의 수 : " + board.getMineCount());
 		System.out.println("깃발의 수 : " + board.getFlagCount());
-		System.out.println("남은 찬수 : " + chance);
+		System.out.println("남은 찬스 : " + chance);
 	}
 	
-	// 사용자 선택
-	private void choice()
+	@Override
+	protected void firstAction()
 	{
 		do
 		{
@@ -110,8 +74,8 @@ public class Minesweeper implements GameApp
 		board.choiceCell(playerRow, playerCol);
 	}
 	
-	// 액션 처리
-	private void action()
+	@Override
+	protected void secondAction()
 	{
 		MenuUtil.showMenu(Action.values(), this);
 	}
@@ -187,6 +151,10 @@ public class Minesweeper implements GameApp
 				board.openCell(playerRow, playerCol);
 			}
 		}
+		else
+		{
+			InputUtil.pause("닫혀있는 셀만 열 수 있습니다.");
+		}
 		
 		cancel();
 		
@@ -232,7 +200,9 @@ public class Minesweeper implements GameApp
 		if(board.isMine(playerRow, playerCol))
 		{	
 			InputUtil.pause("해당 셀은 지뢰입니다.");
-			toggleFlag();
+			
+			if(!board.isFlag(playerRow, playerCol))
+				toggleFlag();
 			return;
 		}
 		else
@@ -252,7 +222,7 @@ public class Minesweeper implements GameApp
 	private void finish(boolean win)
 	{
 		board.finish();
-		board.print();
+		printer.print(board.getBoard());
 		System.out.println(win ? "승리" : "패배");
 		
 		if(win)
@@ -260,6 +230,6 @@ public class Minesweeper implements GameApp
 			System.out.println("클리어 타임 : " + Duration.between(startTime, Instant.now()).getSeconds() + "초");
 		}
 		
-		run = false;
+		endGame();
 	}
 }

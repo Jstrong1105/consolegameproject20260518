@@ -4,40 +4,42 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import game.trump.Card;
-import game.trump.CardDeck;
-import game.trump.CardPrinter;
+import card.Card;
+import card.CardDeck;
+import card.CardPrinter;
+import card.ICardDeck;
 
 /*
  * 메모리 게임 보드판
  */
-public class MemoryBoard
+class MemoryBoard implements IMemoryBoard
 {
 	private List<Card> board;
 	
-	private CardDeck cardDeck;
+	private final ICardDeck cardDeck;
+	private int count;
+	private int group;
 	
-	private final int count;
-	private final int group;
-	
-	MemoryBoard(int count, int group)
+	MemoryBoard(ICardDeck cardDeck)
 	{
-		cardDeck = new CardDeck();
-		this.count = count;
-		this.group = group;
+		this.cardDeck = cardDeck; 
 	}
 	
-	void init()
+	@Override
+	public void init(int count, int group)
 	{
+		this.count = count;
+		this.group = group;
+		
 		cardDeck.init();
 		
 		board = new ArrayList<Card>();
 		
-		for(int i = 0; i < count; i++)
+		for(int i = 0; i < this.count; i++)
 		{
 			Card card = cardDeck.drawCard();
 			
-			for(int j = 0; j < group; j++)
+			for(int j = 0; j < this.group; j++)
 			{
 				board.add(card.copyCard());
 			}
@@ -46,7 +48,8 @@ public class MemoryBoard
 		Collections.shuffle(board);
 	}
 	
-	boolean isOpen(int index)
+	@Override
+	public boolean isOpen(int index)
 	{
 		if(index < 0 || index >= board.size())
 		{
@@ -56,7 +59,8 @@ public class MemoryBoard
 		return board.get(index).isOpen();
 	}
 	
-	void openCard(int index)
+	@Override
+	public void openCard(int index)
 	{
 		if(index < 0 || index >= board.size())
 		{
@@ -66,7 +70,8 @@ public class MemoryBoard
 		board.get(index).open();
 	}
 	
-	void hiddenCard(List<Integer> emp)
+	@Override
+	public void hiddenCard(List<Integer> emp)
 	{
 		for(int i : emp)
 		{
@@ -74,7 +79,8 @@ public class MemoryBoard
 		}
 	}
 	
-	boolean isSameCard(List<Integer> emp)
+	@Override
+	public boolean isSameCard(List<Integer> emp)
 	{
 		for(int i = 0; i < emp.size() - 1; i++)
 		{
@@ -87,26 +93,14 @@ public class MemoryBoard
 		return true;
 	}
 	
-	void printBoard()
+	@Override
+	public List<Card> getBoard()
 	{
-		List<Card> emp = new ArrayList<>();
-		
-		for(int i = 0; i < group; i++)
-		{
-			emp.clear();
-			
-			for(int j = 0; j < count; j++)
-			{
-				emp.add(board.get(i*count + j));
-			}
-			
-			CardPrinter.printCards(emp);
-			
-			System.out.println();
-		}
+		return board;
 	}
 	
-	boolean isClear()
+	@Override
+	public boolean isClear()
 	{
 		return board.stream().allMatch(card->card.isOpen());
 	}

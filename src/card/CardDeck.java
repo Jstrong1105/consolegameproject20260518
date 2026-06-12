@@ -1,4 +1,4 @@
-package game.trump;
+package card;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * 카드덱 클래스
  */
-public class CardDeck
+public final class CardDeck implements ICardDeck
 {
 	private List<Card> cards;
 	
@@ -19,15 +19,16 @@ public class CardDeck
 	
 	// 덱 초기화
 	// 임의로 초기화 가능
+	@Override
 	public void init()
 	{
 		cards = new ArrayList<>();
 		
-		for(int i = 2; i <= 14; i++)
+		for(CardShape shape : CardShape.values())
 		{
-			for(CardShape shape : CardShape.values())
+			for(CardNumber number : CardNumber.values())
 			{
-				cards.add(new Card(shape,i));
+				cards.add(new Card(shape,number));
 			}
 		}
 		
@@ -35,6 +36,7 @@ public class CardDeck
 	}
 	
 	// 카드 한장 주기
+	@Override
 	public Card drawCard()
 	{
 		if(cards.isEmpty())

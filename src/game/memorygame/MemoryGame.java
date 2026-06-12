@@ -5,74 +5,41 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
+import card.Card;
+import card.ICardPrinter;
 import common.ConsoleUtil;
 import common.InputUtil;
 import common.ThreadUtil;
-import game.GameApp;
+import domain.SimpleActionTemplate;
 
-public class MemoryGame implements GameApp
+class MemoryGame extends SimpleActionTemplate
 {
-
-	private static final String GAME_NAME = "메모리 게임";
-	private static final String GAME_DESCRIPTION = "동일한 카드를 모두 맞추세요";
-	
-	@Override
-	public String getGameName()
-	{
-		return GAME_NAME;
-	}
-
-	@Override
-	public String getGameDescription()
-	{
-		return GAME_DESCRIPTION;
-	}
-
-	@Override
-	public void run()
-	{
-		do
-		{
-			init();
-			
-			run = true;
-			
-			while(run)
-			{
-				render();
-				choice();
-				check();
-			}
-			
-		} while (restart());
-	}
-
-	private boolean restart()
-	{
-		return InputUtil.readBool("다시 시작하시겠습니까?", "Y", "N");
-	}
-	
-	private boolean run;
+	private final ICardPrinter printer;
+	private final IMemoryBoard board;
 	
 	private int count;
 	private int group;
-	
-	private MemoryBoard board;
 	
 	private List<Integer> playerList;
 	
 	private Instant startTime;
 	
-	private void init()
+	MemoryGame(ICardPrinter printer, IMemoryBoard board)
 	{
-		 ConsoleUtil.clear();
+		this.printer = printer;
+		this.board = board;
+	}
+	
+	@Override
+	protected void init()
+	{
+		ConsoleUtil.clear();
 		 
 		 count = InputUtil.readInt("카드의 개수를 입력하세요", 4, 8);
 		 group = InputUtil.readInt("그룹의 장수를 입력하세요", 2, 4);
 		 
 		 playerList = new ArrayList<>();
-		 board = new MemoryBoard(count, group);
-		 board.init();
+		 board.init(count, group);
 		 
 		 List<Integer> emp = new ArrayList<Integer>();
 		 
@@ -93,14 +60,32 @@ public class MemoryGame implements GameApp
 		 startTime = Instant.now();
 	}
 	
-	private void render()
+	@Override
+	protected void render()
 	{
 		ConsoleUtil.clear();
 		
-		board.printBoard();
+		List<Card> boardCard = board.getBoard();
+		
+		List<Card> emp = new ArrayList<>();
+		
+		for(int i = 0; i < group; i++)
+		{
+			emp.clear();
+			
+			for(int j = 0; j < count; j++)
+			{
+				emp.add(boardCard.get(i*count + j));
+			}
+			
+			printer.printCards(emp);
+			
+			System.out.println();
+		}
 	}
 	
-	private void choice()
+	@Override
+	protected void action()
 	{
 		int choice;
 		
@@ -119,7 +104,8 @@ public class MemoryGame implements GameApp
 		playerList.add(choice);
 	}
 	
-	private void check()
+	@Override
+	protected void endCheck()
 	{
 		if(playerList.size() >= group)
 		{
@@ -142,7 +128,7 @@ public class MemoryGame implements GameApp
 		
 		if(board.isClear())
 		{
-			run = false;
+			endGame();
 			InputUtil.pause("클리어 타임 : " + Duration.between(startTime, Instant.now()).getSeconds() + "초");
 		}
 	}

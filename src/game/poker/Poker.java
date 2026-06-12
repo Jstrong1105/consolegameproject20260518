@@ -1,77 +1,46 @@
 package game.poker;
 
+import card.Card;
+import card.ICardDeck;
+import card.ICardPrinter;
 import common.ConsoleUtil;
 import common.InputUtil;
-import game.GameApp;
-import game.trump.Card;
-import game.trump.CardDeck;
+import domain.RoundActionTemplate;
 
-public class Poker implements GameApp
+class Poker extends RoundActionTemplate
 {
-	private static final String GAME_DESCRIPTION = "포커를 승리해 목표를 달성하세요";
-	private static final String GAME_NAME = "포커";
-	
-	@Override
-	public String getGameDescription()
-	{
-		return GAME_DESCRIPTION;
-	}
-	
-	@Override
-	public String getGameName()
-	{
-		return GAME_NAME;
-	}
-	
-	@Override
-	public void run()
-	{
-		do
-		{
-			init();
-			run = true;
-			
-			while(run)
-			{
-				roundInit();
-				
-				while(round)
-				{
-					draw();
-					print();
-					betting();
-					eval();
-				}
-				
-				clearCheck();
-			}
-			
-		} while (restart());
-	}
-
 	private static final int TARGET_COIN = 10000;
 	private static final int START_COIN = 1000;
 	private static final int BASIC_BET_COIN = 100;
 	
 	private int mode;
 	
-	private boolean run;
-	private boolean round;
-	
-	private HandCards playerCard;
-	private HandCards cpuCard;
-	private CardDeck deck;
+	private final IHandCards playerCard;
+	private final IHandCards cpuCard;
+	private final IHandRankEvaluator evaluator;
+	private final ICardPrinter printer;
+	private final ICardDeck deck;
 	
 	private int playerCoin;
 	private int betCoin;
 	
-	private void init()
+	Poker(IHandCards playerCard, IHandCards cpuCard, IHandRankEvaluator evaluator, ICardPrinter printer, ICardDeck deck)
+	{
+		this.playerCard = playerCard;
+		this.cpuCard = cpuCard;
+		this.evaluator = evaluator;
+		this.printer = printer;
+		this.deck = deck;
+	}
+	
+	@Override
+	protected void init()
 	{
 		ConsoleUtil.clear();
-	
-		deck = new CardDeck();
-		playerCard = new HandCards(new HandRankEvaluator());
-		cpuCard = new HandCards(new HandRankEvaluator());
+		
+		deck.init();
+		playerCard.init();
+		cpuCard.init();
 		
 		playerCoin = START_COIN;
 		
@@ -84,8 +53,9 @@ public class Poker implements GameApp
 			mode = 7;
 		}
 	}
-	
-	private void roundInit()
+
+	@Override
+	protected void roundInit()
 	{
 		ConsoleUtil.clear();
 		
@@ -94,8 +64,7 @@ public class Poker implements GameApp
 		deck.init();
 		
 		draw();
-		
-		round = true;
+		draw();
 		
 		betCoin = 0;
 		
@@ -111,112 +80,118 @@ public class Poker implements GameApp
 			playerCoin= 0;
 		}
 	}
-	
-	private void print()
+
+	@Override
+	protected void render()
 	{
 		ConsoleUtil.clear();
-		cpuCard.print();
+		printer.printCards(cpuCard.getCard());
 		System.out.println("Cpu 카드");
-		playerCard.print();
+		printer.printCards(playerCard.getCard());
 		System.out.println("당신의 카드");
 		System.out.println();
 	}
-	
-	private void betting()
+
+	@Override
+	protected void action()
 	{
-		System.out.println("목표 코인 : " + TARGET_COIN);
-		System.out.println("남은 코인 : " + playerCoin);
-		System.out.println("베팅 코인 : " + betCoin);
-		
-		int coin = 0;
-	
-		coin = InputUtil.readInt("베팅할 코인을 입력",0,playerCoin);
-	
-		// 기권
-		if(coin == 0 && playerCoin != 0)
+		if(betting())
 		{
-			InputUtil.pause("YOUR FOLD");
-			round = false;
-			return;
-		}
-		
-		betCoin += coin;
-		playerCoin -= coin;
-	}
-	
-	private void draw()
-	{
-		// 플레이어 카드는 공개하고
-		Card card = deck.drawCard();
-		card.open();
-		playerCard.draw(card);
-		
-		// CPU 카드는 비공개
-		cpuCard.draw(deck.drawCard());
-	}
-	
-	private void eval()
-	{
-		if(playerCard.count() >= mode)
-		{
-			for(int i = 0; i < mode; i++)
+			if(playerCard.count() < mode)
 			{
-				cpuCard.open(i);
-			}
-			
-			ConsoleUtil.clear();
-			HandRank cpuResult = cpuCard.getResult();
-			HandRank playerResult = playerCard.getResult();
-			
-			cpuCard.print();
-			System.out.println(cpuResult.getName());
-			
-			playerCard.print();
-			System.out.println(playerResult.getName());
-			
-			
-			// 승패 확인
-			int result = playerResult.compareTo(cpuResult);
-			
-			if(result > 0)
-			{
-				InputUtil.pause("YOU WIN!");
-				playerCoin += betCoin * 2;
-				round = false;
-			}
-			else if(result < 0)
-			{
-				InputUtil.pause("YOU LOOSE");
-				round = false;
+				draw();
 			}
 			else
 			{
-				InputUtil.pause("DRAW");
-				playerCoin += betCoin;
-				round = false;
+				eval();
 			}
 		}
 	}
-	
-	private void clearCheck()
+
+	@Override
+	protected void endCheck()
 	{
 		if(playerCoin >= TARGET_COIN)
 		{
-			run = false;
+			endGame();
 			System.out.println("목표를 달성했습니다.");
 			return;
 		}
 		
 		if(playerCoin <= 0)
 		{
-			run = false;
+			endGame();
 			System.out.println("코인을 전부 소진했습니다.");
 			return;
 		}
 	}
 	
-	private boolean restart()
+	private boolean betting()
 	{
-		return InputUtil.readBool("다시 시작하시겠습니까?", "Y", "N");
+		System.out.println("목표 코인 : " + TARGET_COIN);
+		System.out.println("남은 코인 : " + playerCoin);
+		System.out.println("베팅 코인 : " + betCoin);
+	
+		int coin = InputUtil.readInt("베팅할 코인을 입력",0,playerCoin);
+	
+		// 기권
+		if(coin == 0 && playerCoin != 0)
+		{
+			InputUtil.pause("YOUR FOLD");
+			endRound();
+			return false;
+		}
+		
+		betCoin += coin;
+		playerCoin -= coin;
+		return true;
+	}
+	
+	private void draw()
+	{
+		Card card = deck.drawCard();
+		card.open();
+		playerCard.draw(card);
+		
+		cpuCard.draw(deck.drawCard());
+	}
+	
+	private void eval()
+	{
+		for(int i = 0; i < mode; i++)
+		{
+			cpuCard.open(i);
+		}
+		
+		ConsoleUtil.clear();
+		HandRank cpuResult = evaluator.eval(cpuCard.getCard());
+		HandRank playerResult = evaluator.eval(playerCard.getCard());
+		
+		printer.printCards(cpuCard.getCard());
+		System.out.println(cpuResult.getName());
+		
+		printer.printCards(playerCard.getCard());
+		System.out.println(playerResult.getName());
+		
+		
+		// 승패 확인
+		int result = playerResult.compareTo(cpuResult);
+		
+		if(result > 0)
+		{
+			InputUtil.pause("YOU WIN!");
+			playerCoin += betCoin * 2;
+		}
+		else if(result < 0)
+		{
+			InputUtil.pause("YOU LOSE");
+		}
+		else
+		{
+			InputUtil.pause("DRAW");
+			playerCoin += betCoin;
+		}
+		
+		endRound();
 	}
 }

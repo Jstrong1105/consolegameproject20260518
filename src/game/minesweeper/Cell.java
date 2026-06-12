@@ -3,7 +3,7 @@ package game.minesweeper;
 /**
  * 지뢰찾기 셀 객체
  */
-public class Cell
+class Cell
 {
 	private boolean mine;
 	private boolean choice;
@@ -11,7 +11,7 @@ public class Cell
 	private CellStatus status;
 	
 	// 생성자 
-	public Cell()
+	Cell()
 	{
 		// 초기화
 		this.mine = false;
@@ -21,23 +21,23 @@ public class Cell
 	}
 	
 	// status
-	public boolean isOpen()
+	boolean isOpen()
 	{
 		return status == CellStatus.OPEN;
 	}
 	
-	public boolean isClosed()
+	boolean isClosed()
 	{
 		return status == CellStatus.CLOSED;
 	}
 	
-	public boolean isFlag()
+	boolean isFlag()
 	{
 		return status == CellStatus.FLAG;
 	}
 	
 	// 닫힌 셀만 열 수 있음
-	public void open()
+	void open()
 	{
 		if(status == CellStatus.CLOSED)
 		{
@@ -48,7 +48,7 @@ public class Cell
 	// 깃발 셀은 닫힌 셀로
 	// 닫힌 셀은 일반 셀로
 	// 열린 셀은 액션 없음
-	public void toggleFlag()
+	void toggleFlag()
 	{
 		if(status == CellStatus.CLOSED)
 		{
@@ -62,33 +62,33 @@ public class Cell
 	
 	
 	// setter / getter
-	public boolean isMine()
+	boolean isMine()
 	{
 		return mine;
 	}
 
-	public void setMine(boolean mine)
+	void setMine(boolean mine)
 	{
 		this.mine = mine;
 	}
 
-	public boolean isChoice()
+	boolean isChoice()
 	{
 		return choice;
 	}
 
-	public void setChoice(boolean choice)
+	void setChoice(boolean choice)
 	{
 		this.choice = choice;
 	}
 
-	public int getAdjacentMines()
+	int getAdjacentMines()
 	{
 		return adjacentMines;
 	}
 
 	// 인접 지뢰 계산 방식만 조금 다름
-	public void addAdjacentMines()
+	void addAdjacentMines()
 	{
 		this.adjacentMines++;
 	}

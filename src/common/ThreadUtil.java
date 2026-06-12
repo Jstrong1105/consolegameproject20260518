@@ -18,7 +18,7 @@ public final class ThreadUtil
 		{
 			Thread.sleep(milliSecond);
 		} 
-		catch (Exception e)
+		catch (InterruptedException e)
 		{
 			Thread.currentThread().interrupt();
 		}
@@ -38,7 +38,7 @@ public final class ThreadUtil
 				Thread.sleep(1000);
 			}
 		} 
-		catch (Exception e)
+		catch (InterruptedException e)
 		{
 			Thread.currentThread().interrupt();
 		}

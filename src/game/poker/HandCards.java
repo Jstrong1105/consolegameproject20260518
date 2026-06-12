@@ -3,23 +3,15 @@ package game.poker;
 import java.util.ArrayList;
 import java.util.List;
 
-import game.trump.Card;
-import game.trump.CardPrinter;
+import card.Card;
 
 /**
  * 각각의 사용자가 가지고 있는 카드들을 관리하는 클래스
  */
-public class HandCards implements IHandCards
+class HandCards implements IHandCards
 {
 	private List<Card> handCards;
 
-	public HandCards(IHandRankEvaluator evaluator)
-	{
-		this.evaluator = evaluator;
-	}
-	
-	private IHandRankEvaluator evaluator;
-	
 	@Override
 	public void init()
 	{
@@ -39,9 +31,9 @@ public class HandCards implements IHandCards
 	}
 
 	@Override
-	public void print()
+	public List<Card> getCard()
 	{
-		CardPrinter.printCards(handCards);
+		return handCards;
 	}
 
 	@Override
@@ -49,11 +41,4 @@ public class HandCards implements IHandCards
 	{
 		handCards.get(index).open();
 	}
-
-	@Override
-	public HandRank getResult()
-	{
-		return evaluator.eval(handCards);
-	}
-	
 }

@@ -30,9 +30,9 @@ public final class InputUtil
 		{
 			br.readLine();
 		} 
-		catch (Exception e)
+		catch (IOException e)
 		{
-			throw new RuntimeException("입력 스트림 에러 발생");
+			throw new RuntimeException("입력 스트림 에러 발생",e);
 		}
 	}
 	
@@ -67,7 +67,7 @@ public final class InputUtil
 		}
 		catch (IOException e)
 		{
-			throw new RuntimeException("입력 스트림 에러 발생");
+			throw new RuntimeException("입력 스트림 에러 발생",e);
 		}
 	}
 	

@@ -1,4 +1,4 @@
-package game.trump;
+package card;
 
 import java.util.Objects;
 
@@ -9,68 +9,41 @@ import java.util.Objects;
 public class Card
 {
 	private final CardShape shape;
-	private final int number;
+	private final CardNumber number;
 	private boolean open;
 	
 	// 패키지 프라이빗
-	Card(CardShape shape, int number)
+	Card(CardShape shape, CardNumber number)
 	{
 		this.shape = shape;
 		this.number = number;
 		open = false;
 	}
 	
-	public String getShape()
+	public CardShape getShape()
 	{
-		return shape.getShape();
+		return shape;
 	}
 	
-	public boolean isSpade()
-	{
-		return shape == CardShape.SPADE;
-	}
+	public boolean isSpade() {return shape == CardShape.SPADE;}
 	
-	public boolean isDiamond()
-	{
-		return shape == CardShape.DIAMOND;
-	}
+	public boolean isDiamond(){return shape == CardShape.DIAMOND;}
 	
-	public boolean isHeart()
-	{
-		return shape == CardShape.HEART;
-	}
+	public boolean isHeart() {return shape == CardShape.HEART;}
 	
-	public boolean isClub()
-	{
-		return shape == CardShape.CLUB;
-	}
+	public boolean isClub(){return shape == CardShape.CLUB;}
 	
-	public int getNumber()
-	{
-		return number;
-	}
+	public CardNumber getNumber(){return number;}
 	
-	public boolean isOpen()
-	{
-		return open;
-	}
+	public boolean isOpen(){return open;}
 	
-	public void open()
-	{
-		this.open = true;
-	}
+	public void open(){this.open = true;}
 	
-	public void hidden()
-	{
-		this.open = false;
-	}
+	public void hidden(){this.open = false;}
 	
 	// 카드 복사하기
 	// 상태는 복사하지 않음
-	public Card copyCard()
-	{
-		return new Card(this.shape,this.number);
-	}
+	public Card copyCard(){return new Card(this.shape,this.number);}
 	
 	// 카드 비교하기
 	// 상태와 상관없이 숫자와 모양이 같으면 동일한 카드로 인식

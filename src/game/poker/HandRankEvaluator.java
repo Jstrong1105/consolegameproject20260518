@@ -7,9 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.function.Supplier;
 
-import game.trump.Card;
+import card.Card;
 
-public class HandRankEvaluator implements IHandRankEvaluator
+class HandRankEvaluator implements IHandRankEvaluator
 {
 	@Override
 	public HandRank eval(List<Card> handCards)
@@ -120,9 +120,9 @@ public class HandRankEvaluator implements IHandRankEvaluator
 		
 		for(Card card : handCards)
 		{
-			shapeCount.put(card.getShape(), shapeCount.getOrDefault(card.getShape(), 0) + 1);
-			numberCount.put(card.getNumber(), numberCount.getOrDefault(card.getNumber(), 0) + 1);
-			numberOrder.add(card.getNumber());
+			shapeCount.put(card.getShape().getShape(), shapeCount.getOrDefault(card.getShape(), 0) + 1);
+			numberCount.put(card.getNumber().getNumber(), numberCount.getOrDefault(card.getNumber().getNumber(), 0) + 1);
+			numberOrder.add(card.getNumber().getNumber());
 		}
 		
 		Collections.sort(numberOrder,Collections.reverseOrder());
@@ -142,7 +142,7 @@ public class HandRankEvaluator implements IHandRankEvaluator
 				{
 					if(card.getShape().equals(shape))
 					{
-						flushNumberOrder.add(card.getNumber());
+						flushNumberOrder.add(card.getNumber().getNumber());
 					}
 				}
 				

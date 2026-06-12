@@ -3,7 +3,7 @@ package game.minesweeper;
 /**
  * 지뢰찾기 보드 인터페이스
  */
-public interface ICellBoard
+interface ICellBoard
 {
 	void init(int size, int mineCount);
 	// 보드 초기화
@@ -45,8 +45,8 @@ public interface ICellBoard
 	int getFlagCount();
 	// 깃발 개수
 	
-	void print();
-	// 화면 출력
+	Cell[][] getBoard();
+	// 보드 반환
 	
 	void finish();
 	// 게임 종료 시 지뢰 전부 공개
