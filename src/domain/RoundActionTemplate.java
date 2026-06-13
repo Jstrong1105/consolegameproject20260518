@@ -1,7 +1,5 @@
 package domain;
 
-import common.InputUtil;
-
 /**
  * 한 루프의 같은 액션이 여러번 일어나는 템플릿
  */

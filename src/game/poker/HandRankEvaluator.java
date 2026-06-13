@@ -9,11 +9,17 @@ import java.util.function.Supplier;
 
 import card.Card;
 
+/**
+ * 포커 족보 계산기
+ */
 class HandRankEvaluator implements IHandRankEvaluator
 {
 	@Override
 	public HandRank eval(List<Card> handCards)
 	{
+		if(handCards == null || handCards.size() < 5)
+			throw new IllegalArgumentException("잘못된 카드 목록입니다.");
+		
 		prepareData(handCards);
 		
 		HandRank result = null;
@@ -23,9 +29,7 @@ class HandRankEvaluator implements IHandRankEvaluator
 			result = item.get();
 			
 			if(result != null)
-			{
 				return result;
-			}
 		}
 		
 		throw new IllegalStateException("족보 판독 오류 발생");
@@ -53,6 +57,7 @@ class HandRankEvaluator implements IHandRankEvaluator
 	 * ◆ : 1
 	 * ♥ : 3
 	 * ♣ : 2
+	 * 
 	 * 특정 모양이 한개도 없다면 value 가 0 이 아니라 해당 모양의 키 자체가 없다.
 	 */
 	
@@ -65,6 +70,7 @@ class HandRankEvaluator implements IHandRankEvaluator
 	 * 12 : 1
 	 *  5 : 2
 	 *  2 : 3
+	 *  
 	 * 특정 숫자가 한개도 없다면 해당 숫자의 키 자체가 없다.
 	 */
 	
@@ -183,44 +189,34 @@ class HandRankEvaluator implements IHandRankEvaluator
 		for(int i = 0; i < data.size()-1; i++)
 		{
 			if(data.get(i) - data.get(i+1) == 1)
-			{
 				n++;
-			}
 			else
-			{
 				n = 0;
-			}
-			
 			if(n == 4)
-			{
 				return data.get(i-3);
-			}
 		}
 		
+		// 백스트레이트 검사
 		if(data.contains(14) && data.contains(2) && data.contains(3) && data.contains(4) && data.contains(5))
-		{
 			return 5;
-		}
 		
 		return -1;
 	}
 	
 	private HandRank straightFlush()
 	{
+		// 플러시 조건을 만족하고
 		if(isFlush)
 		{
 			int num = straightNumber(flushNumberOrder);
 			
+			// 플러시를 이루는 숫자가 스트레이트를 만족한다면
 			if(num != -1)
 			{
 				if(num == 14)
-				{
 					rank = HandRankType.ROYAL_FLUSH;
-				}
 				else
-				{
 					rank = HandRankType.STRAIGHT_FLUSH;
-				}
 				
 				kicker.add(num);
 				
@@ -233,6 +229,7 @@ class HandRankEvaluator implements IHandRankEvaluator
 	
 	private HandRank fourOfAKind()
 	{
+		// 4장 그룹이 하나라도 있다며
 		if(groupCount.getOrDefault(4, 0) >= 1)
 		{
 			rank = HandRankType.FOUR_OF_A_KIND;
@@ -243,6 +240,7 @@ class HandRankEvaluator implements IHandRankEvaluator
 				{
 					kicker.add(four);
 					
+					// 4장 그룹을 이룬 숫자를 제외한 가장 큰 숫자 1개를 키커에 추가
 					numberOrder.stream()
 							   .filter(num -> num != four)
 							   .limit(1)
@@ -261,6 +259,8 @@ class HandRankEvaluator implements IHandRankEvaluator
 		int two = groupCount.getOrDefault(2, 0);
 		int three = groupCount.getOrDefault(3, 0);
 		
+		// 3장 그룹이 2개 이상 있거나 
+		// 3장 그룹이 1개 , 2장 그룹이 1개 이상이라면
 		if(three >= 2 || (three >= 1 && two >= 1))
 		{
 			rank = HandRankType.FULL_HOUSE;
@@ -289,10 +289,12 @@ class HandRankEvaluator implements IHandRankEvaluator
 	
 	private HandRank flush()
 	{
+		// 플러시 조건을 만족한다면
 		if(isFlush)
 		{
 			rank = HandRankType.FLUSH;
 			
+			// 플러시를 이루는 숫자들 중 가장 큰 5개를 키커에 추가함
 			flushNumberOrder.stream()
 							.limit(5)
 							.forEach(num -> kicker.add(num));
@@ -307,20 +309,15 @@ class HandRankEvaluator implements IHandRankEvaluator
 	{
 		int num = straightNumber(numberOrder);
 		
+		// 스트레이트 조건을 만족한다면
 		if(num != -1)
 		{
 			if(num == 14)
-			{
 				rank = HandRankType.MOUNTAIN;
-			}
 			else if(num == 5)
-			{
 				rank = HandRankType.BACK_STRAIGHT;
-			}
 			else
-			{
 				rank = HandRankType.STRAIGHT;
-			}
 			
 			kicker.add(num);
 			
@@ -332,6 +329,7 @@ class HandRankEvaluator implements IHandRankEvaluator
 	
 	private HandRank threeOfAKind()
 	{
+		// 3장 그룹이 하나라도 존재한다면
 		if(groupCount.getOrDefault(3, 0) >= 1)
 		{
 			rank = HandRankType.THREE_OF_A_KIND;
@@ -342,6 +340,8 @@ class HandRankEvaluator implements IHandRankEvaluator
 				{
 					kicker.add(triple);
 					
+					// 3장 그룹을 이룬 숫자를 제외한
+					// 가장 큰 숫자 2개를 키커에 추가함
 					numberOrder.stream()
 							   .filter(num -> num != triple)
 							   .limit(2)
@@ -357,6 +357,7 @@ class HandRankEvaluator implements IHandRankEvaluator
 	
 	private HandRank twoPair()
 	{
+		// 2장 그룹이 2개 이상 존재한다며
 		if(groupCount.getOrDefault(2, 0) >= 2)
 		{
 			rank = HandRankType.TWO_PAIR;
@@ -365,14 +366,18 @@ class HandRankEvaluator implements IHandRankEvaluator
 			{
 				if(numberCount.get(highPair) >= 2)
 				{
+					// 2장 그룹을 이룬 숫자 중 첫번째로 큰 숫자
 					kicker.add(highPair);
 					
 					for(int lowPair : numberOrder)
 					{
+						// 2장 그룹을 이룬 숫자 중 두번째로 큰 숫자
 						if(lowPair != highPair && numberCount.get(lowPair) >= 2)
 						{
 							kicker.add(lowPair);
 							
+							// 2장 그룹을 이룬 숫자 중 첫번쨰,두번째로 큰 숫자를 제외한
+							// 가장 큰 숫자 하나를 키커에 추가함
 							numberOrder.stream()
 									   .filter(num -> num != highPair && num != lowPair)
 									   .limit(1)
@@ -390,6 +395,7 @@ class HandRankEvaluator implements IHandRankEvaluator
 	
 	private HandRank onePair()
 	{
+		// 2장 그룹이 하나라도 존재한다면
 		if(groupCount.getOrDefault(2, 0) >= 1)
 		{
 			rank = HandRankType.ONE_PAIR;
@@ -398,8 +404,10 @@ class HandRankEvaluator implements IHandRankEvaluator
 			{
 				if(numberCount.get(pair) >= 2)
 				{
+					// 2장 그룹을 이룬 숫자
 					kicker.add(pair);
 					
+					// 2장 그룹을 이룬 숫자를 제외한 가장 큰 숫자 3개를 키커에 추가함
 					numberOrder.stream()
 							   .filter(num -> num != pair)
 							   .limit(3)
@@ -417,6 +425,7 @@ class HandRankEvaluator implements IHandRankEvaluator
 	{
 		rank = HandRankType.HIGH_CARD;
 		
+		// 가장 큰 숫자 5개를 키커에 추가함
 		numberOrder.stream()
 				   .limit(5)
 				   .forEach(num -> kicker.add(num));

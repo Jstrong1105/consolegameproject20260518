@@ -26,13 +26,9 @@ public class CardPrinter implements ICardPrinter
 			if(card.isOpen())
 			{
 				if(card.isSpade() || card.isClub())
-				{
 					System.out.printf("│  %s  │ ",BLUE + card.getShape().getShape() + NONE);
-				}
 				else
-				{
 					System.out.printf("│  %s  │ ",RED + card.getShape().getShape() + NONE);
-				}
 			}
 			else
 			{
@@ -47,13 +43,9 @@ public class CardPrinter implements ICardPrinter
 			if(card.isOpen())
 			{
 				if(card.isSpade() || card.isClub())
-				{
 					System.out.printf("│  %s  │ ",BLUE + card.getNumber().getShape() + NONE);
-				}
 				else
-				{
 					System.out.printf("│  %s  │ ",RED + card.getNumber().getShape() + NONE);
-				}
 			}
 			else
 			{

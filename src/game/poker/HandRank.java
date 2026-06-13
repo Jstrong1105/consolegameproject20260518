@@ -15,9 +15,7 @@ class HandRank implements Comparable<HandRank>
 	HandRank(HandRankType type, List<Integer> kickers)
 	{
 		if(kickers.size() != type.getSize())
-		{
 			throw new IllegalArgumentException("키커 수 오류");
-		}
 		
 		this.type = type;
 		this.kickers = List.copyOf(kickers);

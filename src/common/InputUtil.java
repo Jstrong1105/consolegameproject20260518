@@ -51,17 +51,13 @@ public final class InputUtil
 			String answer = br.readLine();
 			
 			if(answer == null)
-			{
 				answer = "";
-			}
 			
 			answer = answer.trim();
 			
 			// 테스트 과정에서 필요한 중단 코드
 			if(answer.equals("exit"))
-			{
 				System.exit(0);
-			}
 			
 			return answer;
 		}
@@ -113,14 +109,9 @@ public final class InputUtil
 				int result = Integer.parseInt(answer);
 				
 				if(result < min || result > max)
-				{
 					System.out.printf("%d ~ %d 사이로 입력해주세요.%n",min,max);
-				}
-				
 				else
-				{
 					return result;
-				}
 			}
 			catch (NumberFormatException e)
 			{
@@ -145,17 +136,11 @@ public final class InputUtil
 			String answer = readString(prompt);
 			
 			if(answer.equalsIgnoreCase(trueAnswer))
-			{
 				return true;
-			}
 			else if(answer.equalsIgnoreCase(falseAnswer))
-			{
 				return false;
-			}
 			else
-			{
 				System.out.printf("%s 또는 %s 를 입력해주세요.%n",trueAnswer,falseAnswer);
-			}
 		}
 	}
 }

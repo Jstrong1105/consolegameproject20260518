@@ -32,6 +32,7 @@ class CellBoard implements ICellBoard
 		
 		board = new Cell[size][size];
 		
+		// 보드판 초기화
 		for(int row = 0; row < size; row++)
 		{
 			for(int col = 0; col < size; col++)
@@ -40,17 +41,47 @@ class CellBoard implements ICellBoard
 			}
 		}
 		
-		int count = 0;
+		/*
+		  지뢰 배치 로직
+		  
+		  ※ 50%를 기준으로 랜덤 배치 or 전체를 지뢰로 바꾸고 랜덤 지뢰 해제 
+		 */
 		
-		while(count < mineCount)
+		boolean flag = true;
+		int count = mineCount;
+		
+		if(size*size/2 < mineCount)
 		{
-			int row = rd.nextInt(size);
-			int col = rd.nextInt(size);
-			
-			if(!board[row][col].isMine())
+			 flag = false;
+			 count = size*size-mineCount;
+			 Arrays.stream(board).flatMap(Arrays::stream).forEach(c->c.setMine(true));
+		}
+
+		for(int i = 0; i < count; i++)
+		{
+			while(true)
 			{
-				board[row][col].setMine(true);
-				count++;
+				int row = rd.nextInt(size);
+				int col = rd.nextInt(size);
+				
+				if(flag)
+				{
+					if(!board[row][col].isMine())
+					{
+						board[row][col].setMine(true);
+						count++;
+						break;
+					}
+				}
+				else
+				{
+					if(board[row][col].isMine())
+					{
+						board[row][col].setMine(false);
+						count++;
+						break;
+					}
+				}
 			}
 		}
 	}
@@ -87,9 +118,7 @@ class CellBoard implements ICellBoard
 			for(int c = 0; c < size; c++)
 			{
 				if(board[r][c].isMine())
-				{
 					addAdjacentMines(r, c);
-				}
 			}
 		}
 	}
@@ -103,9 +132,7 @@ class CellBoard implements ICellBoard
 			int nCol = col + D_COL[i];
 			
 			if(nRow < 0 || nCol < 0 || nRow >= size || nCol >= size)
-			{
 				continue;
-			}
 			
 			board[nRow][nCol].addAdjacentMines();
 		}
@@ -114,10 +141,9 @@ class CellBoard implements ICellBoard
 	@Override
 	public void openCell(int row, int col)
 	{
+		// 닫힌 셀이 아니면 열리지 않음
 		if(!board[row][col].isClosed())
-		{
 			return;
-		}
 		
 		board[row][col].open();
 		openCount++;
@@ -154,9 +180,7 @@ class CellBoard implements ICellBoard
 				
 				// 보드판의 범위를 벗어났다면 넘어감
 				if(nRow < 0 || nCol < 0 || nRow >= size || nCol >= size)
-				{
 					continue;
-				}
 				
 				// 이미 열려있거나 깃발 상태라면 넘어감
 				if(board[nRow][nCol].isClosed())
@@ -166,9 +190,7 @@ class CellBoard implements ICellBoard
 					
 					// 만약 해당 칸도 인접 지뢰가 0 이라면 해당 칸을 Queue 에 추가함
 					if(board[nRow][nCol].getAdjacentMines() == 0)
-					{
 						temp.add(new int[] {nRow, nCol});
-					}
 				}
 			}
 		}

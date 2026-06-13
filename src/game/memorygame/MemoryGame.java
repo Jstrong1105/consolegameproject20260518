@@ -94,9 +94,7 @@ class MemoryGame extends SimpleActionTemplate
 			choice = InputUtil.readInt("카드를 선택",1,count*group)-1;
 
 			if(board.isOpen(choice)) 
-			{
 				System.out.println("이미 오픈된 카드입니다.");
-			}
 			
 		} while (board.isOpen(choice));
 		

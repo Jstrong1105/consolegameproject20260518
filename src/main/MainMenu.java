@@ -1,18 +1,21 @@
 package main;
 
 import common.ConsoleUtil;
+
 import common.InputUtil;
 import domain.GameInfo;
 
+/**
+ * 메인 메뉴 출력 유틸 
+ */
 public final class MainMenu
 {
-
+	private MainMenu() {}
+	
 	public static <E extends GameInfo> void showGameList(E[] list)
 	{
 		if(list == null || list.length <= 0)
-		{
 			return;
-		}
 		
 		boolean running = true;
 		

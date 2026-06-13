@@ -10,9 +10,7 @@ public final class MenuUtil
 	public static <T, E extends Enum<E> & IMenu<T>> void showMenu(E[] menuList,T obj)
 	{
 		if(menuList == null || menuList.length <= 0)
-		{
 			throw new IllegalArgumentException("파라미터 오류");
-		}
 		
 		for (E menu : menuList)
 		{

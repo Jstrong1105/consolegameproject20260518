@@ -9,8 +9,11 @@ import common.IMenu;
 import common.InputUtil;
 import common.MenuUtil;
 import domain.DoubleActionTemplate;
-import domain.GameApp;
 
+/**
+ * 지뢰 찾기 App 클래스
+ * 출력 → 선택 → 출력 → 액션 
+ */
 class Minesweeper extends DoubleActionTemplate
 {
 	private final ICellBoard board;
@@ -65,9 +68,7 @@ class Minesweeper extends DoubleActionTemplate
 			playerCol = InputUtil.readInt("열을 선택", 1, size)-1;
 			
 			if(board.isOpen(playerRow, playerCol))
-			{
 				System.out.println("이미 열린 칸입니다.");
-			}
 			
 		} while (board.isOpen(playerRow, playerCol));
 		
@@ -208,6 +209,8 @@ class Minesweeper extends DoubleActionTemplate
 		else
 		{
 			InputUtil.pause("해당 셀은 지뢰가 아닙니다.");
+			if(board.isFlag(playerRow, playerCol))
+				toggleFlag();
 			open();
 		}
 	}
@@ -226,9 +229,7 @@ class Minesweeper extends DoubleActionTemplate
 		System.out.println(win ? "승리" : "패배");
 		
 		if(win)
-		{
 			System.out.println("클리어 타임 : " + Duration.between(startTime, Instant.now()).getSeconds() + "초");
-		}
 		
 		endGame();
 	}

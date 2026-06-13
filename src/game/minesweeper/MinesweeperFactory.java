@@ -3,7 +3,7 @@ package game.minesweeper;
 import domain.GameApp;
 
 /**
- * 지뢰찾기를 조립해서 돌려주는 메소드
+ * 지뢰찾기를 조립해서 돌려주는 클래스
  */
 public final class MinesweeperFactory
 {

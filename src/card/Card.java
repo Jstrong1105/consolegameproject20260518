@@ -57,7 +57,6 @@ public class Card
 		Card card = (Card)o;
 		
 		return this.shape == card.shape && this.number == card.number;
-		
 	}
 	
 	@Override

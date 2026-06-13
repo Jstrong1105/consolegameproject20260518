@@ -2,6 +2,9 @@ package domain;
 
 import common.InputUtil;
 
+/**
+ * 최상위 게임 템플릿
+ */
 public abstract class GameTemplate implements GameApp
 {
 	protected boolean running;

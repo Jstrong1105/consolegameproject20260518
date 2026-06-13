@@ -5,8 +5,6 @@ import java.util.Collections;
 import java.util.List;
 
 import card.Card;
-import card.CardDeck;
-import card.CardPrinter;
 import card.ICardDeck;
 
 /*
@@ -52,9 +50,7 @@ class MemoryBoard implements IMemoryBoard
 	public boolean isOpen(int index)
 	{
 		if(index < 0 || index >= board.size())
-		{
 			throw new IllegalArgumentException("보드 크기 벗어남");
-		}
 		
 		return board.get(index).isOpen();
 	}
@@ -63,9 +59,7 @@ class MemoryBoard implements IMemoryBoard
 	public void openCard(int index)
 	{
 		if(index < 0 || index >= board.size())
-		{
 			throw new IllegalArgumentException("보드 크기 벗어남");
-		}
 		
 		board.get(index).open();
 	}

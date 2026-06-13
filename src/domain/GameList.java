@@ -6,6 +6,9 @@ import game.memorygame.MemoryGameFactory;
 import game.minesweeper.MinesweeperFactory;
 import game.poker.PokerFactory;
 
+/**
+ * 게임 목록 등록 enum
+ */
 public enum GameList implements GameInfo
 {
 	

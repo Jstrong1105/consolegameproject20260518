@@ -38,20 +38,12 @@ class Poker extends RoundActionTemplate
 	{
 		ConsoleUtil.clear();
 		
-		deck.init();
-		playerCard.init();
-		cpuCard.init();
-		
 		playerCoin = START_COIN;
 		
 		if(InputUtil.readBool("1. 5포커 / 2. 7포커", "1", "2"))
-		{
 			mode = 5;
-		}
 		else
-		{
 			mode = 7;
-		}
 	}
 
 	@Override
@@ -62,7 +54,7 @@ class Poker extends RoundActionTemplate
 		playerCard.init();
 		cpuCard.init();
 		deck.init();
-		
+			
 		draw();
 		draw();
 		
@@ -87,6 +79,7 @@ class Poker extends RoundActionTemplate
 		ConsoleUtil.clear();
 		printer.printCards(cpuCard.getCard());
 		System.out.println("Cpu 카드");
+		
 		printer.printCards(playerCard.getCard());
 		System.out.println("당신의 카드");
 		System.out.println();
@@ -98,13 +91,9 @@ class Poker extends RoundActionTemplate
 		if(betting())
 		{
 			if(playerCard.count() < mode)
-			{
 				draw();
-			}
 			else
-			{
 				eval();
-			}
 		}
 	}
 
@@ -117,8 +106,7 @@ class Poker extends RoundActionTemplate
 			System.out.println("목표를 달성했습니다.");
 			return;
 		}
-		
-		if(playerCoin <= 0)
+		else if(playerCoin <= 0)
 		{
 			endGame();
 			System.out.println("코인을 전부 소진했습니다.");

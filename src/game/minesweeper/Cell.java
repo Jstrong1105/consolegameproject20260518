@@ -21,28 +21,17 @@ class Cell
 	}
 	
 	// status
-	boolean isOpen()
-	{
-		return status == CellStatus.OPEN;
-	}
+	boolean isOpen() {	return status == CellStatus.OPEN;}
 	
-	boolean isClosed()
-	{
-		return status == CellStatus.CLOSED;
-	}
+	boolean isClosed() {return status == CellStatus.CLOSED;}
 	
-	boolean isFlag()
-	{
-		return status == CellStatus.FLAG;
-	}
+	boolean isFlag(){return status == CellStatus.FLAG;}
 	
 	// 닫힌 셀만 열 수 있음
 	void open()
 	{
 		if(status == CellStatus.CLOSED)
-		{
 			status = CellStatus.OPEN;
-		}
 	}
 	
 	// 깃발 셀은 닫힌 셀로
@@ -51,43 +40,26 @@ class Cell
 	void toggleFlag()
 	{
 		if(status == CellStatus.CLOSED)
-		{
 			status = CellStatus.FLAG;
-		}
 		else if(status == CellStatus.FLAG)
-		{
 			status = CellStatus.CLOSED;
-		}
 	}
-	
 	
 	// setter / getter
-	boolean isMine()
-	{
-		return mine;
-	}
+	boolean isMine(){return mine;}
 
-	void setMine(boolean mine)
-	{
-		this.mine = mine;
-	}
+	void setMine(boolean mine){this.mine = mine;}
 
-	boolean isChoice()
-	{
-		return choice;
-	}
+	boolean isChoice(){	return choice;}
 
-	void setChoice(boolean choice)
-	{
-		this.choice = choice;
-	}
+	void setChoice(boolean choice){this.choice = choice;}
 
-	int getAdjacentMines()
-	{
-		return adjacentMines;
-	}
+	int getAdjacentMines(){return adjacentMines;}
 
-	// 인접 지뢰 계산 방식만 조금 다름
+	// 인접 지뢰 계산 방식은
+	// 한번의 숫자를 대입하는 방식이 아닌
+	// 보드판 전체를 순회하면서 지뢰 발견 시
+	// 주변 8칸의 인접 칸의 지뢰 개수를 증감 시킴
 	void addAdjacentMines()
 	{
 		this.adjacentMines++;
