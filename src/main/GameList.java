@@ -1,7 +1,8 @@
-package domain;
+package main;
 
 import java.util.function.Supplier;
 
+import domain.GameApp;
 import game.memorygame.MemoryGameFactory;
 import game.minesweeper.MinesweeperFactory;
 import game.poker.PokerFactory;
@@ -11,7 +12,6 @@ import game.poker.PokerFactory;
  */
 public enum GameList implements GameInfo
 {
-	
 	MINESWEEPER("지뢰찾기","지뢰를 피하세요!",MinesweeperFactory::getGame)
 	, POKER("포커겜블","목표 코인을 달성하세요!",PokerFactory::getGame)
 	, MEMORY("메모리게임","같은 카드를 모두 찾으세요!",MemoryGameFactory::getGame)

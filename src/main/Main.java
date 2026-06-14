@@ -1,7 +1,5 @@
 package main;
 
-import domain.GameList;
-
 /**
  * 프로그램 진입점
  */

@@ -1,4 +1,6 @@
-package domain;
+package main;
+
+import domain.GameApp;
 
 /**
  * 게임 목록 인터페이스

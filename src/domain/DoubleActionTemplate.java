@@ -23,10 +23,6 @@ public abstract class DoubleActionTemplate extends GameTemplate
 			
 		} while (restart());
 	}
-	protected void endGame()
-	{
-		running = false;
-	}
 	
 	protected abstract void firstAction();
 	protected abstract void secondAction();

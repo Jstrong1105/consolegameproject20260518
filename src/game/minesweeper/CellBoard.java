@@ -69,7 +69,6 @@ class CellBoard implements ICellBoard
 					if(!board[row][col].isMine())
 					{
 						board[row][col].setMine(true);
-						count++;
 						break;
 					}
 				}
@@ -78,7 +77,6 @@ class CellBoard implements ICellBoard
 					if(board[row][col].isMine())
 					{
 						board[row][col].setMine(false);
-						count++;
 						break;
 					}
 				}

@@ -3,7 +3,6 @@ package main;
 import common.ConsoleUtil;
 
 import common.InputUtil;
-import domain.GameInfo;
 
 /**
  * 메인 메뉴 출력 유틸 

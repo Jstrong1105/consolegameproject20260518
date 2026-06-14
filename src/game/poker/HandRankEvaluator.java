@@ -126,7 +126,7 @@ class HandRankEvaluator implements IHandRankEvaluator
 		
 		for(Card card : handCards)
 		{
-			shapeCount.put(card.getShape().getShape(), shapeCount.getOrDefault(card.getShape(), 0) + 1);
+			shapeCount.put(card.getShape().getShape(), shapeCount.getOrDefault(card.getShape().getShape(), 0) + 1);
 			numberCount.put(card.getNumber().getNumber(), numberCount.getOrDefault(card.getNumber().getNumber(), 0) + 1);
 			numberOrder.add(card.getNumber().getNumber());
 		}
