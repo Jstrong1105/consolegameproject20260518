@@ -146,7 +146,7 @@ class HandRankEvaluator implements IHandRankEvaluator
 				
 				for(Card card : handCards)
 				{
-					if(card.getShape().equals(shape))
+					if(card.getShape().getShape().equals(shape))
 					{
 						flushNumberOrder.add(card.getNumber().getNumber());
 					}
